@@ -10,8 +10,9 @@
 class CardCounter
 {
 private:
-  int runningCount;
-  int decksRemaining;
+  double runningCount;
+  double decksRemaining;
+  int cardsDealt;
   std::map<std::string, int> cardValues;
 
 public:
@@ -23,25 +24,31 @@ public:
     };
   }
 
+  void updateDecksRemaining(int cardsDealt) {
+    decksRemaining -= static_cast<double>(cardsDealt) / 52.0;
+  }
+
   void updateCount(const std::string& card) {
     if(cardValues.find(card) != cardValues.end()) {
       runningCount += cardValues[card];
+      cardsDealt++;
+      updateDecksRemaining(1);
     }
     else {
       std::cout << "Invalid card entered. Try again.\n";
     }
   }
 
-  void updateDecksRemaining(double decksUsed) {
-    decksRemaining -= decksUsed;
-  }
-
-  int getRunningCount() const {
+  double getRunningCount() const {
     return runningCount;
   }
 
   double getTrueCount() const {
     return static_cast<double>(runningCount) / decksRemaining;
+  }
+
+  double getDecksRemaining() const {
+    return decksRemaining;
   }
 };
 
@@ -81,6 +88,8 @@ void Render() {
   } else {
     std::cout << "Running Count: " << cardCounter->getRunningCount() << std::endl;
     std::cout << "True Count: " << cardCounter->getTrueCount() << std::endl;
+    std::cout << "Decks Remaining: " << cardCounter->getDecksRemaining() << std::endl;
+
   }
 }
 
